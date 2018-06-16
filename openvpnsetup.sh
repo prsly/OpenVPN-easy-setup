@@ -1,10 +1,11 @@
 #! /bin/bash
 #
 # Express setup of OpenVPN server 
-# for CentOS 7.x and Ubuntu Server 16.x / 17.x
+# for Ubuntu Server 16.x / 17.x
 # by xl-tech https://github.com/xl-tech
+# fork by prsly https://github.com/prsly
 #
-# Version 0.1 12 August 2017
+# Version 0.1.1 16.06.2018
 #
 # Use only on fresh installed machine! It can rewrite your firewall rules
 # or your current OpenVPN config (if you have it before).
@@ -38,18 +39,16 @@ else
 fi
 
 #package install
-yum_packages="openssl openvpn easy-rsa iptables iptables-services curl"
 deb_packages="openssl openvpn easy-rsa iptables netfilter-persistent iptables-persistent curl"
 
-if cat /etc/*release | grep ^NAME | grep CentOS; then
-    yum -y install epel-release
-    yum -y install $yum_packages
-    systemctl disable firewalld & systemctl stop firewalld
+
 elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+    apt-get update
+    apt-get upgrade
     apt-get install -y $deb_packages
     ufw disable
 else
-    echo "Unsupported distro, sorry"
+    echo "This script for Ubuntu. If you want install in CentOS check: http://github.com/xl-tech/OpenVPN-easy-setup"
     exit 1;
 fi
 
