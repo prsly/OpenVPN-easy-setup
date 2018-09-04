@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # Express setup of OpenVPN server 
 # for Ubuntu Server 16.x / 17.x
@@ -16,11 +16,11 @@
 #
 
 #check for root
-IAM=$(whoami)
-if [ ${IAM} != "root" ]; then
-    echo "You must be root to use this script"
-    exit 1
-fi
+#IAM=$(whoami)
+#if [ ${IAM} != "root" ]; then
+#    echo "You must be root to use this script"
+#    exit 1
+#fi
 
 #check for tun/tap
 if [ -c /dev/net/tun ]; then
