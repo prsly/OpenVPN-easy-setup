@@ -4,5 +4,7 @@ python:
   - "3.6"
 install:
   - pip install flake8
+  - pip install flake8-import-order
 script:
+  - echo "[flake8]\nimport-order-style = google" >> setup.cfg
   - flake8
