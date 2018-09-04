@@ -23,12 +23,12 @@
 #fi
 
 #check for tun/tap
-if [ -c /dev/net/tun ]; then
-    echo TUN/TAP is enabled
-else
-    echo TUN/TAP is disabled. Contact your VPS provider to enable it
-    exit 1
-fi
+#if [ -c /dev/net/tun ]; then
+#   echo TUN/TAP is enabled
+#else
+#    echo TUN/TAP is disabled. Contact your VPS provider to enable it
+#    exit 1
+#fi
 	
 #enable IPv4 forwarding
 if sysctl net.ipv4.ip_forward |grep 0; then
@@ -42,7 +42,7 @@ fi
 deb_packages="openssl openvpn easy-rsa iptables netfilter-persistent iptables-persistent curl"
 
 
-elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+if cat /etc/*release | grep ^NAME | grep Ubuntu; then
     apt-get update
     apt-get upgrade
     apt-get install -y $deb_packages
