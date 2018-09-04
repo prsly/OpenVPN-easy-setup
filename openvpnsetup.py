@@ -50,20 +50,20 @@ def subpopen(arg):
     return subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
 
 
-print("1 --- Checking superuser permission")
+print('1 --- Checking superuser permission')
 iam = getpass.getuser()
-if (iam != "root"):
-    print("You must be root to use this script")
+if (iam != 'root'):
+    print('You must be root to use this script')
     sys.exit(1)
 
-print("2 --- Checking TUN/TAP")
-if (os.path.isdir("/dev/net/tun")):
-    print("TUN/TAP is enabled")
+print('2 --- Checking TUN/TAP')
+if (os.path.isdir('/dev/net/tun')):
+    print('TUN/TAP is enabled')
 else:
-    print("TUN/TAP is disabled. Contact your VPS provider to enable it")
+    print('TUN/TAP is disabled. Contact your VPS provider to enable it')
     sys.exit(2)
 
-print("3 --- Checking IPv4 Forwarding")
+print('3 --- Checking IPv4 Forwarding')
 ipv4forward = subcall('sysctl net.ipv4.ip_forward | grep 0', 1)
 if (ipv4forward == 0):
     subcall('sysctl -w net.ipv4.ip_forward=1', 1)
@@ -71,9 +71,9 @@ if (ipv4forward == 0):
     conf.write('net.ipv4.ip_forward = 1')
     conf.close()
 else:
-    print("IPv4 forwarding is already enabled")
+    print('IPv4 forwarding is already enabled')
 
-print("4 --- Installing applications")
+print('4 --- Installing applications')
 checkUbuntu = subcall('cat /etc/*release | grep ^NAME | grep Ubuntu', 1)
 if (checkUbuntu == 0):
     subcall('apt update')
@@ -82,8 +82,8 @@ if (checkUbuntu == 0):
             'netfilter-persistent iptables-persistent curl')
     subcall('ufw disable')
 else:
-    print("This script for Ubuntu. If you want install in CentOS check: " +
-          "http://github.com/xl-tech/OpenVPN-easy-setup")
+    print('This script for Ubuntu. If you want install in CentOS check: ' +
+          'http://github.com/xl-tech/OpenVPN-easy-setup')
     sys.exit(3)
 
 iip, temp = subpopen('hostname -I').communicate()
@@ -93,13 +93,13 @@ eip, temp = subpopen("curl -s checkip.dyndns.org | sed -e 's/.*" +
                      "Current IP Address: //' -e 's/<.*$//'").communicate()
 eip = eip.decode('utf-8')[0:-2]
 
-iipv6, temp = subpopen("ip -6 addr|grep inet6|grep fe80|awk -F " +
+iipv6, temp = subpopen('ip -6 addr|grep inet6|grep fe80|awk -F ' +
                        "'[ \t]+|' '{print $3}'").communicate()
 iipv6 = iipv6.decode('utf-8')[0:-1]
 
-print("Select server IP to listen on (only used for IPv4):\n 1) Internal " +
-      "IP - {i} (in case you are behind NAT)\n 2) ".format(i=iip) +
-      "External IP - {e}".format(e=eip))
+print('Select server IP to listen on (only used for IPv4):\n 1) Internal ' +
+      'IP - {i} (in case you are behind NAT)\n 2) '.format(i=iip) +
+      'External IP - {e}'.format(e=eip))
 choose = int(input())
 for case in switch(choose):
     if case(1):
@@ -111,43 +111,43 @@ for case in switch(choose):
     if case():
         print('Invalid option')
 
-print("Select server PORT to listen on:\n" +
-      " 1) tcp 443 (recommended)" +
-      " 2) udp 1194 (default)"
-      " 3) Enter manually (proto (lowercase!) port)")
+print('Select server PORT to listen on:\n' +
+      ' 1) tcp 443 (recommended)' +
+      ' 2) udp 1194 (default)' +
+      ' 3) Enter manually (proto port)')
 choose = int(input())
 for case in switch(choose):
     if case(1):
-        port = "tcp 443"
+        port = 'tcp 443'
     if case(2):
-        port = "udp 1194"
+        port = 'udp 1194'
     if case(3):
-        print("Enter proto and port (like tcp 80 or udp 53): ")
-        port = input()
+        print('Enter proto and port (like tcp 80 or udp 53): ')
+        port = input().lowercase()
     if case():
         print('Invalid option')
-portl, portn = port.rsplit(" ")
-portl6 = portl + "6"
+portl, portn = port.rsplit(' ')
+portl6 = portl + '6'
 
-print("Select server cipher:\n" +
-      " 1) AES-256-GCM (default for OpenVPN 2.4.x, not supported by " +
-      "Ubuntu Server 16.x)\n 2) AES-256-CBC\n 3) AES-128-CBC (default for" +
-      " OpenVPN 2.3.x\n 4) BF-CBC (insecure)")
+print('Select server cipher:\n' +
+      ' 1) AES-256-GCM (default for OpenVPN 2.4.x, not supported by ' +
+      'Ubuntu Server 16.x)\n 2) AES-256-CBC\n 3) AES-128-CBC (default for' +
+      ' OpenVPN 2.3.x\n 4) BF-CBC (insecure)')
 choose = int(input())
 for case in switch(choose):
     if case(1):
-        cipher = "AES-256-GCM"
+        cipher = 'AES-256-GCM'
     if case(2):
-        cipher = "AES-256-CBC"
+        cipher = 'AES-256-CBC'
     if case(3):
-        cipher = "AES-128-CBC"
+        cipher = 'AES-128-CBC'
     if case(4):
-        cipher = "BF-CBC"
+        cipher = 'BF-CBC'
     if case():
         print('Invalid option')
 
-print("Enable IPv6? (ensure that your machine have IPv6 support):\n" +
-      " 1) Yes\n 2) No")
+print('Enable IPv6? (ensure that your machine have IPv6 support):\n' +
+      ' 1) Yes\n 2) No')
 choose = int(input())
 for case in switch(choose):
     if case(1):
@@ -157,18 +157,18 @@ for case in switch(choose):
     if case():
         print('Invalid option')
 
-print("Check your selection\n" +
-      "Server will listen on {i}\n".format(i=ip) +
-      "Server will listen on {i}\n".format(i=port) +
-      "Server will use {i} cipher\n".format(i=cipher) +
-      "IPv6 - {i} (1 is enabled, 0 is disabled)\n".format(i=ipv6e))
-input("Press Enter to continue...\n")
+print('Check your selection\n' +
+      'Server will listen on {i}\n'.format(i=ip) +
+      'Server will listen on {i}\n'.format(i=port) +
+      'Server will use {i} cipher\n'.format(i=cipher) +
+      'IPv6 - {i} (1 is enabled, 0 is disabled)\n'.format(i=ipv6e))
+input('Press Enter to continue...\n')
 
-os.mkdir("/etc/openvpn/easy-rsa/keys")
-os.mkdir("/etc/openvpn/logs")
-os.mkdir("/etc/openvpn/bundles")
-os.mkdir("/etc/openvpn/ccd")
+os.mkdir('/etc/openvpn/easy-rsa/keys')
+os.mkdir('/etc/openvpn/logs')
+os.mkdir('/etc/openvpn/bundles')
+os.mkdir('/etc/openvpn/ccd')
 indextxt = os.open('/etc/openvpn/easy-rsa/keys/index.txt', 'a').close()
 serial = os.open('/etc/openvpn/easy-rsa/keys/serial',
-                 'w').write("00").close()
-shutil.copy("/usr/share/easy-rsa/*", "/etc/openvpn/easy-rsa")
+                 'w').write('00').close()
+shutil.copy('/usr/share/easy-rsa/*', '/etc/openvpn/easy-rsa')
