@@ -135,13 +135,13 @@ print("Select server cipher:\n" +
 choose = int(input())
 for case in switch(choose):
     if case(1):
-        cipher="AES-256-GCM"
+        cipher = "AES-256-GCM"
     if case(2):
-        cipher="AES-256-CBC"
+        cipher = "AES-256-CBC"
     if case(3):
-        cipher="AES-128-CBC"
+        cipher = "AES-128-CBC"
     if case(4):
-        cipher="BF-CBC"
+        cipher = "BF-CBC"
     if case():
         print('Invalid option')
 
@@ -150,9 +150,9 @@ print("Enable IPv6? (ensure that your machine have IPv6 support):\n" +
 choose = int(input())
 for case in switch(choose):
     if case(1):
-        ipv6e=1
+        ipv6e = 1
     if case(2):
-        ipv6e=0
+        ipv6e = 0
     if case():
         print('Invalid option')
 
@@ -161,7 +161,7 @@ print("Check your selection\n" +
       "Server will listen on {i}\n".format(i=port) +
       "Server will use {i} cipher\n".format(i=cipher) +
       "IPv6 - {i} (1 is enabled, 0 is disabled)\n".format(i=ipv6e))
-raw_input("Press to continue...\n")
+input("Press Enter to continue...\n")
 
 os.mkdir("/etc/openvpn/easy-rsa")
 os.mkdir("/etc/openvpn/easy-rsa/keys")
