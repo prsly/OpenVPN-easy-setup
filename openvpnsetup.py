@@ -127,3 +127,44 @@ for case in switch(choose):
         print('Invalid option')
 portl, portn = port.rsplit(" ")
 portl6 = portl + "6"
+
+print("Select server cipher:\n" +
+      " 1) AES-256-GCM (default for OpenVPN 2.4.x, not supported by " +
+      "Ubuntu Server 16.x)\n 2) AES-256-CBC\n 3) AES-128-CBC (default for" +
+      " OpenVPN 2.3.x\n 4) BF-CBC (insecure)")
+choose = int(input())
+for case in switch(choose):
+    if case(1):
+        cipher="AES-256-GCM"
+    if case(2):
+        cipher="AES-256-CBC"
+    if case(3):
+        cipher="AES-128-CBC"
+    if case(4):
+        cipher="BF-CBC"
+    if case():
+        print('Invalid option')
+
+print("Enable IPv6? (ensure that your machine have IPv6 support):\n" +
+      " 1) Yes\n 2) No")
+choose = int(input())
+for case in switch(choose):
+    if case(1):
+        ipv6e=1
+    if case(2):
+        ipv6e=0
+    if case():
+        print('Invalid option')
+
+print("Check your selection\n" +
+      "Server will listen on {i}\n".format(i=ip) +
+      "Server will listen on {i}\n".format(i=port) +
+      "Server will use {i} cipher\n".format(i=cipher) +
+      "IPv6 - {i} (1 is enabled, 0 is disabled)\n".format(i=ipv6e))
+raw_input("Press to continue...\n")
+
+os.mkdir("/etc/openvpn/easy-rsa")
+os.mkdir("/etc/openvpn/easy-rsa/keys")
+os.mkdir("/etc/openvpn/logs")
+os.mkdir("/etc/openvpn/bundles")
+os.mkdir("/etc/openvpn/ccd")
