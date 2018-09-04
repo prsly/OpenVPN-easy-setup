@@ -1,11 +1,9 @@
-#!/usr/bin/python
-#
 # Express setup of OpenVPN server
 # for Ubuntu Server 16.x / 17.x
 # by xl-tech https://github.com/xl-tech
 # fork by prsly https://github.com/prsly
 #
-# Version 0.1.1 16.06.2018
+# Version 1.0 4.09.2018
 #
 # Use only on fresh installed machine! It can rewrite your firewall rules
 # or your current OpenVPN config (if you have it before).
@@ -39,6 +37,17 @@ class switch(object):
             return True
         return False
 
+
+def subcall(arg, pipe):
+    if pipe = 1:
+        return subprocess.call(arg, shell=True, stdout=subprocess.PIPE)
+    else:
+        return subprocess.call(arg, shell=True)
+
+
+def subpopen(arg):
+    return subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
+
 print("1 --- Checking superuser permission")
 iam = getpass.getuser()
 if (iam != "root"):
@@ -53,11 +62,9 @@ else:
     sys.exit(2)
 
 print("3 --- Checking IPv4 Forwarding")
-ipv4forward = subprocess.call('sysctl net.ipv4.ip_forward | grep 0',
-                              shell=True, stdout=subprocess.PIPE)
+ipv4forward = subcall('sysctl net.ipv4.ip_forward | grep 0', 1)
 if (ipv4forward == 0):
-    subprocess.call('sysctl -w net.ipv4.ip_forward=1',
-                    shell=True, stdout=subprocess.PIPE)
+    subcall('sysctl -w net.ipv4.ip_forward=1', 1)
     conf = open('/etc/sysctl.conf', 'a')
     conf.write('net.ipv4.ip_forward = 1')
     conf.close()
@@ -65,33 +72,27 @@ else:
     print("IPv4 forwarding is already enabled")
 
 print("4 --- Installing applications")
-checkUbuntu = subprocess.call('cat /etc/*release | grep ^NAME | grep Ubuntu',
-                              shell=True, stdout=subprocess.PIPE)
+checkUbuntu = subcall('cat /etc/*release | grep ^NAME | grep Ubuntu', 1)
 if (checkUbuntu == 0):
-    subprocess.call('apt update', shell=True)
-    subprocess.call('apt upgrade', shell=True)
-    subprocess.call('apt install -y openssl openvpn easy-rsa iptables ' +
-                    'netfilter-persistent iptables-persistent curl',
-                    shell=True)
-    subprocess.call('ufw disable', shell=True)
+    subcall('apt update')
+    subcall('apt upgrade')
+    subcall('apt install -y openssl openvpn easy-rsa iptables ' +
+            'netfilter-persistent iptables-persistent curl')
+    subcall('ufw disable')
 else:
     print("This script for Ubuntu. If you want install in CentOS check: " +
           "http://github.com/xl-tech/OpenVPN-easy-setup")
     sys.exit(3)
 
-iip, temp = subprocess.Popen('hostname -I', shell=True,
-                             stdout=subprocess.PIPE).communicate()
+iip, temp = subpopen('hostname -I').communicate()
 iip = iip.decode('utf-8')[0:-2]
 
-eip, temp = subprocess.Popen("curl -s checkip.dyndns.org | sed -e 's/.*" +
-                             "Current IP Address: //' -e 's/<.*$//'",
-                             shell=True, stdout=subprocess.PIPE).communicate()
+eip, temp = subpopen("curl -s checkip.dyndns.org | sed -e 's/.*" +
+                     "Current IP Address: //' -e 's/<.*$//'").communicate()
 eip = eip.decode('utf-8')[0:-2]
 
-iipv6, temp = subprocess.Popen("ip -6 addr|grep inet6|grep fe80|awk -F " +
-                               "'[ \t]+|' '{print $3}'",
-                               shell=True,
-                               stdout=subprocess.PIPE).communicate()
+iipv6, temp = subpopen("ip -6 addr|grep inet6|grep fe80|awk -F " +
+                       "'[ \t]+|' '{print $3}'").communicate()
 iipv6 = iipv6.decode('utf-8')[0:-1]
 
 print(f"Select server IP to listen on (only used for IPv4):\n 1) Internal " +
