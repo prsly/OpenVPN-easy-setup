@@ -18,6 +18,7 @@ import os
 import sys
 import subprocess
 import getpass
+import shutil
 
 
 class switch(object):
@@ -163,8 +164,11 @@ print("Check your selection\n" +
       "IPv6 - {i} (1 is enabled, 0 is disabled)\n".format(i=ipv6e))
 input("Press Enter to continue...\n")
 
-os.mkdir("/etc/openvpn/easy-rsa")
 os.mkdir("/etc/openvpn/easy-rsa/keys")
 os.mkdir("/etc/openvpn/logs")
 os.mkdir("/etc/openvpn/bundles")
 os.mkdir("/etc/openvpn/ccd")
+indextxt = os.open('/etc/openvpn/easy-rsa/keys/index.txt', 'a').close()
+serial = os.open('/etc/openvpn/easy-rsa/keys/serial',
+                 'w').write("00").close()
+shutil.copy("/usr/share/easy-rsa/*", "/etc/openvpn/easy-rsa")
