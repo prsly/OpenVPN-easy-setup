@@ -2,5 +2,7 @@ language: python
 python:
   - "2.7"
   - "3.6"
+install:
+  - apt install python-flake8
 script:
   - flake8 cmdbox
