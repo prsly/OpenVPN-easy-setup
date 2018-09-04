@@ -5,6 +5,15 @@ import sys
 import subprocess
 import getpass
 
+def select_IP(choose):
+    if choose == 1:
+        return iip
+    if choose == 2:
+        return eip
+    raise: 
+        ValueError('Invalid option')
+        select_IP(input())
+
 print("1 --- Checking superuser permission")
 iam = getpass.getuser()
 if (iam != "root") :
@@ -49,3 +58,4 @@ iipv6,temp = subprocess.Popen("ip -6 addr|grep inet6|grep fe80|awk -F '[ \t]+|' 
 iipv6 = iipv6.decode('utf-8')[0:-1]
 
 print(f"Select server IP to listen on (only used for IPv4):\n 1) Internal IP - {iip} (in case you are behind NAT)\n 2) External IP - {eip}")
+ip = select_IP(input())
