@@ -131,9 +131,7 @@ touch /etc/openvpn/easy-rsa/keys/index.txt
 touch /etc/openvpn/easy-rsa/keys/serial
 echo 00 >> /etc/openvpn/easy-rsa/keys/serial
 #copy easy-rsa
-if cat /etc/*release | grep ^NAME | grep CentOS; then
-    cp /usr/share/easy-rsa/2.0/* /etc/openvpn/easy-rsa
-elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+if cat /etc/*release | grep ^NAME | grep Ubuntu; then
     cp /usr/share/easy-rsa/* /etc/openvpn/easy-rsa
 fi
 #vars for certs
@@ -346,14 +344,7 @@ COMMIT" > /tmp/ip6tables
 
 #start services
 
-if cat /etc/*release | grep ^NAME | grep CentOS; then
-     cp /tmp/ip6tables /etc/sysconfig/ip6tables
-     cp /tmp/iptables /etc/sysconfig/iptables
-     systemctl enable iptables & systemctl start iptables
-     systemctl enable ip6tables & systemctl start ip6tables
-     systemctl enable openvpn@server & systemctl start openvpn@server
-     systemctl restart iptables & systemctl restart ip6tables
-elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+if cat /etc/*release | grep ^NAME | grep Ubuntu; then
      cp /tmp/ip6tables /etc/iptables/rules.v6
      cp /tmp/iptables /etc/iptables/rules.v4
      systemctl enable netfilter-persistent & systemctl start netfilter-persistent
