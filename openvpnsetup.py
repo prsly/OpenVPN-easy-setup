@@ -96,8 +96,8 @@ iipv6, temp = subpopen("ip -6 addr|grep inet6|grep fe80|awk -F " +
                        "'[ \t]+|' '{print $3}'").communicate()
 iipv6 = iipv6.decode('utf-8')[0:-1]
 
-print(f"Select server IP to listen on (only used for IPv4):\n 1) Internal" +
-      f" IP - {iip} (in case you are behind NAT)\n 2) External IP - {eip}")
+print("Select server IP to listen on (only used for IPv4):\n 1) Internal " +
+      "IP - {i} (in case you are behind NAT)\n 2) External IP - {e}".format(i=iip, e=eip))
 choose = int(input())
 for case in switch(choose):
     if case(1):
