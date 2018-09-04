@@ -14,11 +14,11 @@
 #
 # -*- coding: utf-8 -*-
 
-import os
 import getpass
+import os
 import subprocess
+import shulil
 import sys
-import shutil
 
 
 class switch(object):
