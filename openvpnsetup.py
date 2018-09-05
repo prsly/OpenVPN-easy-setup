@@ -165,11 +165,26 @@ serial = os.open('/etc/openvpn/easy-rsa/keys/serial',
                  'w').write('00').close()
 shutil.copy('/usr/share/easy-rsa/*', '/etc/openvpn/easy-rsa')
 
-# PUT VARS HERE
-# os.environ['EASY_RSA'] = '/etc/openvpn/easy-rsa'
-# os.environ['OPENSSL'] = 'openssl'
-# os.environ['PKCS11TOOL'] = 'pkcs11-tool'
-# os.environ['GREP'] = 'grep'
+easy_rsa = '/etc/openvpn/easy-rsa'
+openssl = 'openssl'
+pkcs11tool = 'pkcs11-tool'
+grep = 'grep'
+key_config, temp = scp.subpopen('{i}/whichopensslcnf ' +
+                                '{i}'.format(i=easy_rsa)).communicate()
+key_config = key_config.decode('utf-8')
+key_dir = '{i}/keys'.format(i=easy_rsa)
+pkcs11_module_path = 'dummy'
+pkcs11_pin = 'dummy'
+key_size = 2048
+ca_expire = 3650
+key_expire = 1825
+key_country = 'US'
+key_province = 'CA'
+key_city = 'SanFrancisco'
+key_org = 'Fort-Funston'
+key_email = 'my@vpn.net'
+key_ou = 'MyVPN'
+key_name = 'EasyRSA'
 # PUT VARS HERE
 
 ipv6_config.ipv6_config(ipv6e, ip, portl6)
