@@ -17,10 +17,10 @@
 import getpass
 import os
 import shutil
-import subprocess
 import sys
 
 import ipv6_config
+import subcallpopen as scp
 
 
 class switch(object):
@@ -41,17 +41,6 @@ class switch(object):
         return False
 
 
-def subcall(arg, pipe):
-    if pipe == 1:
-        return subprocess.call(arg, shell=True, stdout=subprocess.PIPE)
-    else:
-        return subprocess.call(arg, shell=True)
-
-
-def subpopen(arg):
-    return subprocess.Popen(arg, shell=True, stdout=subprocess.PIPE)
-
-
 print('1 --- Checking superuser permission')
 iam = getpass.getuser()
 if (iam != 'root'):
@@ -66,9 +55,9 @@ else:
     sys.exit(2)
 
 print('3 --- Checking IPv4 Forwarding')
-ipv4forward = subcall('sysctl net.ipv4.ip_forward | grep 0', 1)
+ipv4forward = scp.subcall('sysctl net.ipv4.ip_forward | grep 0', 1)
 if (ipv4forward == 0):
-    subcall('sysctl -w net.ipv4.ip_forward=1', 1)
+    scp.subcall('sysctl -w net.ipv4.ip_forward=1', 1)
     conf = open('/etc/sysctl.conf', 'a')
     conf.write('net.ipv4.ip_forward = 1')
     conf.close()
@@ -76,27 +65,27 @@ else:
     print('IPv4 forwarding is already enabled')
 
 print('4 --- Installing applications')
-checkUbuntu = subcall('cat /etc/*release | grep ^NAME | grep Ubuntu', 1)
+checkUbuntu = scp.subcall('cat /etc/*release | grep ^NAME | grep Ubuntu', 1)
 if (checkUbuntu == 0):
-    subcall('apt update')
-    subcall('apt upgrade')
-    subcall('apt install -y openssl openvpn easy-rsa iptables ' +
-            'netfilter-persistent iptables-persistent curl')
-    subcall('ufw disable')
+    scp.subcall('apt update')
+    scp.subcall('apt upgrade')
+    scp.subcall('apt install -y openssl openvpn easy-rsa iptables ' +
+                'netfilter-persistent iptables-persistent curl')
+    scp.subcall('ufw disable')
 else:
     print('This script for Ubuntu. If you want install in CentOS check: ' +
           'http://github.com/xl-tech/OpenVPN-easy-setup')
     sys.exit(3)
 
-iip, temp = subpopen('hostname -I').communicate()
+iip, temp = scp.subpopen('hostname -I').communicate()
 iip = iip.decode('utf-8')[0:-2]
 
-eip, temp = subpopen("curl -s checkip.dyndns.org | sed -e 's/.*" +
-                     "Current IP Address: //' -e 's/<.*$//'").communicate()
+eip, temp = scp.subpopen("curl -s checkip.dyndns.org | sed -e 's/.*" +
+                         "Current IP Address: //' -e 's/<.*$//'").communicate()
 eip = eip.decode('utf-8')[0:-2]
 
-iipv6, temp = subpopen('ip -6 addr|grep inet6|grep fe80|awk -F ' +
-                       "'[ \t]+|' '{print $3}'").communicate()
+iipv6, temp = scp.subpopen('ip -6 addr|grep inet6|grep fe80|awk -F ' +
+                           "'[ \t]+|' '{print $3}'").communicate()
 iipv6 = iipv6.decode('utf-8')[0:-1]
 
 print('Select server IP to listen on (only used for IPv4):\n 1) Internal ' +
