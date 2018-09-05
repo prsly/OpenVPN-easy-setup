@@ -19,6 +19,7 @@ import os
 import shutil
 import subprocess
 import sys
+import ipv6_config
 
 
 class switch(object):
@@ -172,3 +173,10 @@ indextxt = os.open('/etc/openvpn/easy-rsa/keys/index.txt', 'a').close()
 serial = os.open('/etc/openvpn/easy-rsa/keys/serial',
                  'w').write('00').close()
 shutil.copy('/usr/share/easy-rsa/*', '/etc/openvpn/easy-rsa')
+
+#os.environ['EASY_RSA'] = '/etc/openvpn/easy-rsa'
+#os.environ['OPENSSL'] = 'openssl'
+#os.environ['PKCS11TOOL'] = 'pkcs11-tool'
+#os.environ['GREP'] = 'grep'
+
+ipv6_config.ipv6_config(ipv6e, ip, portl6)
