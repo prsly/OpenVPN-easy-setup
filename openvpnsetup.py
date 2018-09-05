@@ -17,7 +17,7 @@
 import getpass
 import os
 import subprocess
-import shulil
+import shutil
 import sys
 
 
