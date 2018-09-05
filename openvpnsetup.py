@@ -20,6 +20,7 @@ import shutil
 import sys
 
 import ipv6_config
+import main_part
 import subcallpopen as scp
 
 
@@ -164,9 +165,13 @@ serial = os.open('/etc/openvpn/easy-rsa/keys/serial',
                  'w').write('00').close()
 shutil.copy('/usr/share/easy-rsa/*', '/etc/openvpn/easy-rsa')
 
+# PUT VARS HERE
 # os.environ['EASY_RSA'] = '/etc/openvpn/easy-rsa'
 # os.environ['OPENSSL'] = 'openssl'
 # os.environ['PKCS11TOOL'] = 'pkcs11-tool'
 # os.environ['GREP'] = 'grep'
+# PUT VARS HERE
 
 ipv6_config.ipv6_config(ipv6e, ip, portl6)
+
+main_part.main_part(portn, portl, cipher)
