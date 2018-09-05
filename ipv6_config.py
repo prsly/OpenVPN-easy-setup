@@ -1,5 +1,5 @@
-import os
 import openvpnsetup as ovs
+
 
 def ipv6_config(enable, ip, portl6):
     if enable == 1:
